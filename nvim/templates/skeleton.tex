@@ -1,0 +1,64 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Wenneker Assignment
+% LaTeX Template
+% Version 2.0 (12/1/2019)
+%
+% This template originates from:
+% http://www.LaTeXTemplates.com
+%
+% Authors:
+% Vel (vel@LaTeXTemplates.com)
+% Frits Wenneker
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt]{scrartcl} % Font size
+
+\input{structure.tex} % Include the file specifying the document structure and custom commands
+
+\usepackage{siunitx}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{pgfplots}
+\usepackage{gensymb}
+\usepackage{subfig}
+\pgfplotsset{
+    every axis plot/.append style={line width=0.8pt,color=black},
+    every axis plot post/.append style={
+        every mark/.append style={mark=asterisk,line width=.3pt,color=black}
+    }
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{
+    \normalfont\normalsize
+    \textsc{University of Surrey}\\ % Your university, school and/or department name(s)
+    \vspace{25pt} % Whitespace
+    \rule{\linewidth}{0.5pt}\\ % Thin top horizontal rule
+    \vspace{20pt} % Whitespace
+    {\huge Report}\\ % The assignment title
+    \vspace{12pt} % Whitespace
+    \rule{\linewidth}{2pt}\\ % Thick bottom horizontal rule
+    \vspace{12pt} % Whitespace
+}
+
+\author{\LARGE Izzy Cassell} % Your name
+
+\date{\normalsize\today} % Today's date (\today) or a custom date
+
+\begin{document}
+
+\maketitle % Print the title
+
+\end{document}

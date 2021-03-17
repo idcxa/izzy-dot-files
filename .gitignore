@@ -1,0 +1,7 @@
+*
+!*/
+!nvim/**
+!sway/**
+!alacritty/**
+!.gitignore
+discord/**
