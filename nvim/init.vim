@@ -49,7 +49,11 @@ endif
 
 au BufNewFile *.tex
     \ 0r ~/.config/nvim/templates/skeleton.tex |
-    \ !cp ~/.config/nvim/templates/structure.tex ./
+    \ !cp ~/.config/nvim/templates/structure.tex ./ && mkdir Figures
+
+au BufRead *.tex
+    \ set shiftwidth=2 |
+    \ colorscheme tir_black |
 
 " Folding
 set foldmethod=indent
@@ -75,6 +79,21 @@ Plug 'FredKSchott/CoVim'
 Plug 'elixir-editors/vim-elixir'
 Plug 'slashmili/alchemist.vim'
 Plug 'vim-syntastic/syntastic'
+Plug '907th/vim-auto-save'
+
+let g:auto_save = 1  " enable AutoSave on Vim startup
+
+" Syntastic
+        set statusline+=%#warningmsg#
+        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%*
+
+        let g:syntastic_always_populate_loc_list = 1
+        "let g:syntastic_auto_loc_list = 1
+        let g:syntastic_check_on_open = 1
+        let g:syntastic_check_on_wq = 0
+        let g:syntastic_tex_checkers = ['proselint']
+        let g:syntastic_enable_balloons = 1
 
 " Julia
 Plug 'JuliaEditorSupport/julia-vim'
@@ -125,6 +144,7 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 
 " Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
 	set splitbelow splitright
+
 
 " Nerd tree
 	map <C-n> :NERDTreeToggle<CR>
@@ -217,6 +237,7 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 	" Compiling
 	autocmd FileType lua map <F5> :w <bar> !lua %:t <CR>
 	autocmd FileType lua map <F4> :w <bar> !luajit %:t <CR>
+	autocmd FileType lua map <F3> :w <bar> !love . <CR>
 
 """ MOONSCRIPT
         " Compiling
@@ -270,13 +291,13 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 
 """LATEX
 	" Compiling
-	autocmd FileType tex imap <F4> <Esc> :w <bar> !xelatex %:t<CR>
-	autocmd FileType tex map <F4> <Esc> :w <bar> !xelatex %:t<CR>
+	autocmd FileType tex imap <F4> <Esc> :w <bar> !pdflatex %:t<CR>
+	autocmd FileType tex map <F4> <Esc> :w <bar> !pdflatex %:t<CR>
 	autocmd FileType tex map <F5> <Esc> :!mupdf %:r.pdf<CR>
 	" Word count:
 	autocmd FileType tex map <leader>w :w !detex \| wc -w<CR>
 	" Spellchecker
-	autocmd FileType tex set spelllang=en_gb spell
+	"autocmd FileType tex set spelllang=en_gb spell
 	" Code snippets
 	autocmd FileType tex inoremap ,eq \begin{equation*}<Enter><Enter>\end{equation*}<Enter><Enter><++><Esc>3kA
 	autocmd FileType tex inoremap ,al \begin{align}<Enter>\begin{split}<Enter><Enter>\end{split}<Enter>\end{align}<Esc>2kA<Tab><Tab><Tab><Tab>
@@ -294,7 +315,7 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 
 	"autocmd FileType tex inoremap ,fr \begin{frame}<Enter>\frametitle{}<Enter><Enter><++><Enter><Enter>\end{frame}<Enter><Enter><++><Esc>6kf}i
 	autocmd FileType tex inoremap ,im \begin{figure}[h]<Enter>\centering<Enter>\includegraphics[width=0.6\columnwidth]{}<Enter>\caption{<++>}<Enter>\end{figure}<Enter><Esc>3kA<Esc>i
-	autocmd FileType tex inoremap ,fi \begin{figure}[h]<Enter>\centering<Enter>\includegraphics[width=<++>\columnwidth]{<++>}<Enter>\caption{<++>}<Enter>\end{figure}<Enter><Enter><Esc>6kA
+	autocmd FileType tex inoremap ,fi \vspace{0.5cm}<Enter>\begin{Figure}<Enter>\centering<Enter>\includegraphics[width=\columnwidth]{<++>}<Enter>\captionof{figure}{<++>}<Enter>\end{Figure}<Enter>\vspace{0.5cm}<Enter><Enter><Esc>8kA
 	autocmd FileType tex inoremap ,exe \begin{exe}<Enter>\ex<Space><Enter>\end{exe}<Enter><Enter><++><Esc>3kA
 	autocmd FileType tex inoremap ,em \emph{}<++><Esc>T{i
 	autocmd FileType tex inoremap ,bf \textbf{}<++><Esc>T{i
