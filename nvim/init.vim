@@ -14,7 +14,7 @@ endif
 
 " Tab Indents
 set shiftwidth=4
-set expandtab
+"set expandtab
 
 au BufNewFile,BufRead js
     \ set tabstop=2

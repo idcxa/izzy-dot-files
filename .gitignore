@@ -4,4 +4,6 @@
 !sway/**
 !alacritty/**
 !.gitignore
+!README.md
 discord/**
+google-chrome/**
