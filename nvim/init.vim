@@ -80,6 +80,7 @@ Plug 'elixir-editors/vim-elixir'
 Plug 'slashmili/alchemist.vim'
 Plug 'vim-syntastic/syntastic'
 Plug '907th/vim-auto-save'
+Plug 'machakann/vim-sandwich'
 
 let g:auto_save = 1  " enable AutoSave on Vim startup
 
@@ -113,6 +114,7 @@ set clipboard+=unnamedplus
 "colorscheme buttercream
 "colorscheme kolor
 colorscheme maui
+hi MatchParen cterm=bold ctermfg=208 ctermbg=233 gui=italic guifg=#121212 guibg=#ff8700
 
 set noshowmode
 let g:lightline = { 'colorscheme': 'jellybeans', }
@@ -167,7 +169,7 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 	nnoremap S :%s//g<Left><Left>
 
 " Compile document, be it groff/LaTeX/markdown/etc.
-	map <leader>c :w! \| !compiler <c-r>%<CR>
+	"map <leader>c :w! \| !compiler <c-r>%<CR>
 
 " Open corresponding .pdf/.html or preview
 	map <leader>p :!opout <c-r>%<CR><CR>
@@ -208,6 +210,11 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
 """CONFIG
+""" PARENTHESIS
+	vmap <C-9> c(<c-r><c-o>")
+	vmap <C-S-[> c{<c-r><c-o>"}
+	vmap <C-[> c[<c-r><c-o>"]
+
 	" Compiling
 	autocmd FileType h imap <F4> <Esc> :w <bar> !make clean install<CR>
 	autocmd FileType h imap <F4> <Esc> :w <bar> !make clean install<CR>
@@ -250,7 +257,12 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
         autocmd FileType haskell map <F4> :w <bar> !ghc -dynamic %:t <CR>
         autocmd FileType haskell map <F5> :w <bar> !./%:r <CR>
 
-"""C
+""" C
+	" Comments
+	autocmd FileType c vmap <C-c> c/* <c-r><c-o>" */<Esc>
+	autocmd FileType c nmap <C-c> ^<s-c>/* <c-r>" */<Esc>
+	autocmd FileType c imap <C-c> <Esc>^<s-c>/* <c-r>" */<Esc>
+	"autocmd FileType C vmap <C-c> :w <CR>
         " Compiling
         let $ssh_directory = "jc02003@access.eps.surrey.ac.uk"
         function! RemoteCCompiling()

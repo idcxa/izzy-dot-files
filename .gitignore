@@ -3,7 +3,10 @@
 !nvim/**
 !sway/**
 !alacritty/**
+!scripts/**
 !.gitignore
 !README.md
 discord/**
 google-chrome/**
+chromium/**
+awesome/**
