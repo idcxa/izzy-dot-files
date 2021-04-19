@@ -60,27 +60,28 @@ set foldmethod=indent
 set foldlevel=99
 if !exists('g:vscode')
 call plug#begin('~/.config/nvim/plugged')
-Plug 'tpope/vim-surround'
+"Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/goyo.vim'
 Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'jreybert/vimagit'
-Plug 'vimwiki/vimwiki'
-Plug 'tpope/vim-commentary'
+"Plug 'jreybert/vimagit'
+"Plug 'vimwiki/vimwiki'
+"Plug 'tpope/vim-commentary'
 Plug 'vifm/vifm.vim'
-Plug 'kovetskiy/sxhkd-vim'
+"Plug 'kovetskiy/sxhkd-vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'xolox/vim-colorscheme-switcher'
 Plug 'xolox/vim-misc'
-Plug 'LaTeX-Box-Team/LaTeX-Box'
+"Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'itchyny/lightline.vim'
-Plug 'leafo/moonscript-vim'
-Plug 'FredKSchott/CoVim'
-Plug 'elixir-editors/vim-elixir'
-Plug 'slashmili/alchemist.vim'
+"Plug 'leafo/moonscript-vim'
+"Plug 'FredKSchott/CoVim'
+"Plug 'elixir-editors/vim-elixir'
+"Plug 'slashmili/alchemist.vim'
 Plug 'vim-syntastic/syntastic'
 Plug '907th/vim-auto-save'
-Plug 'machakann/vim-sandwich'
+Plug 'digitaltoad/vim-pug'
+Plug 'ycm-core/YouCompleteMe'
 
 let g:auto_save = 1  " enable AutoSave on Vim startup
 
@@ -114,12 +115,14 @@ set clipboard+=unnamedplus
 "colorscheme buttercream
 "colorscheme kolor
 colorscheme maui
-hi MatchParen cterm=bold ctermfg=208 ctermbg=233 gui=italic guifg=#121212 guibg=#ff8700
+
+highlight MatchParen cterm=bold ctermfg=208 ctermbg=233 gui=italic guifg=#121212 guibg=#ff8700
 
 set noshowmode
 let g:lightline = { 'colorscheme': 'jellybeans', }
 
 " Some basics:
+	set is
         cnoremap kj <c-c>
         cnoremap jk <C-C>
 	nnoremap c "_c
@@ -139,7 +142,7 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Goyo plugin makes text more readable when writing prose:
-	map <leader>f :Goyo \| set bg=light \| set linebreak \| colorscheme maui<CR>
+	map <leader>f :Goyo \| set bg=light \| set linebreak<CR>
 
 " Spell-check set to <leader>o, 'o' for 'orthography':
 	map <leader>o :setlocal spell! spelllang=en_gb<CR>
@@ -219,28 +222,31 @@ let g:lightline = { 'colorscheme': 'jellybeans', }
 	autocmd FileType h imap <F4> <Esc> :w <bar> !make clean install<CR>
 	autocmd FileType h imap <F4> <Esc> :w <bar> !make clean install<CR>
 
-"""ELIXIR
+""" ELIXIR
 	autocmd FileType elixir map <F5> :w <bar> !elixir %:t<CR>
 
-"""RUST
+""" RUBY
+	autocmd FileType ruby map <F5> :w <bar> !ruby %:t<CR>
+
+""" RUST
 	autocmd FileType rust map <F4> :w <bar> !rustc %:t<CR>
 	autocmd FileType rust map <F5> :w <bar> !./%:r<CR>
-"""PYTHON
+""" PYTHON
 	autocmd FileType python map <F5> :w <bar> !python3 %:t<CR>
 	autocmd FileType python inoremap ,pr print()<Esc>i
 
-"""JAVA PLUGIN
+""" JAVA PLUGIN
 	autocmd FileType java imap <F4> <Esc> :w <bar> !mvn clean install; scp target/*.jar minecraft@192.168.0.14:/opt/minecraft/heaven/plugins/<CR>
 
-"""SCALA
+""" SCALA
 	" Compiling
 	autocmd FileType scala map <F4> :w <bar> !scalac %:t<CR>
 	autocmd FileType scala map <F5> :w <bar> !scala %:r <CR>
 
-"""JULIA
+""" JULIA
 	" Compiling
 	autocmd FileType julia map <F5> :w <bar> !julia %:t<CR>
-"""LUA
+""" LUA
 	" Compiling
 	autocmd FileType lua map <F5> :w <bar> !lua %:t <CR>
 	autocmd FileType lua map <F4> :w <bar> !luajit %:t <CR>
