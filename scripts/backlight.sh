@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 bd=/sys/class/backlight/intel_backlight/brightness
 

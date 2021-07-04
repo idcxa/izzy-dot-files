@@ -34,10 +34,7 @@ font:
 cursor_style: Beam
 
 # Background opacity
-background_opacity: 0.75
-
-shell:
-  "/bin/bash"
+background_opacity: 0.9
 
 # Keybinds
 mouse_bindings:
@@ -52,7 +49,7 @@ mouse:
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
 
-  url:
+  hints:
       # URL launcher
       #
       # This program is executed when clicking on a text which is recognized as a URL.

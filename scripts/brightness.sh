@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 BDV=$(cat /sys/class/backlight/intel_backlight/brightness)
 

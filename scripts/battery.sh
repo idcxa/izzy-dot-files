@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 B1=$(cat /sys/class/power_supply/BAT0/capacity)
 B2=$(cat /sys/class/power_supply/BAT1/capacity)
 
