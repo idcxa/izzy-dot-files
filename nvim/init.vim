@@ -1,4 +1,11 @@
 let mapleader =","
+set clipboard+=unnamedplus
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
 
 ""==================================================================""
 " Plugins
@@ -15,47 +22,49 @@ if !exists('g:vscode')
 	call plug#begin('~/.config/nvim/plugged')
 	"Plug 'tpope/vim-surround'
 	Plug 'scrooloose/nerdtree'
-	Plug 'junegunn/goyo.vim'
-	Plug 'PotatoesMaster/i3-vim-syntax'
-	Plug 'leafo/moonscript-vim'
+	"Plug 'junegunn/goyo.vim'
+	"Plug 'PotatoesMaster/i3-vim-syntax'
+	"Plug 'leafo/moonscript-vim'
 	"Plug 'jreybert/vimagit'
 	"Plug 'vimwiki/vimwiki'
 	"Plug 'tpope/vim-commentary'
-	Plug 'vifm/vifm.vim'
+	"Plug 'vifm/vifm.vim'
 	"Plug 'kovetskiy/sxhkd-vim'
 	Plug 'flazz/vim-colorschemes'
 	Plug 'xolox/vim-colorscheme-switcher'
 	Plug 'xolox/vim-misc'
 	"Plug 'LaTeX-Box-Team/LaTeX-Box'
 	Plug 'itchyny/lightline.vim'
-	"Plug 'leafo/moonscript-vim'
+	Plug 'leafo/moonscript-vim'
 	"Plug 'FredKSchott/CoVim'
 	Plug 'elixir-editors/vim-elixir'
 	Plug 'slashmili/alchemist.vim'
 	"Plug 'vim-syntastic/syntastic'
 	"Plug '907th/vim-auto-save'
-	Plug 'digitaltoad/vim-pug'
+	"Plug 'digitaltoad/vim-pug'
 	"Plug 'ycm-core/YouCompleteMe'
 	Plug 'arrufat/vala.vim'
 	Plug 'mbbill/undotree'
-	Plug 'kassio/neoterm'
+	"Plug 'kassio/neoterm'
 	Plug 'JuliaEditorSupport/julia-vim'
 	Plug 'LnL7/vim-nix'
 	Plug 'rust-lang/rust.vim'
 	"Plug 'dense-analysis/ale'
 	Plug 'itchyny/vim-gitbranch'
-	Plug 'airblade/vim-rooter'
+	"Plug 'airblade/vim-rooter'
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'editorconfig/editorconfig-vim'
 
-	Plug 'puremourning/vimspector'
-	let g:vimspector_enable_mappings = 'HUMAN'
-
 	Plug 'roxma/nvim-yarp'
+	"Plug 'bling/vim-bufferline'
+	"Plug 'bagrat/vim-buffet'
+	"Plug 'ryanoasis/vim-devicons'
+	Plug 'kyazdani42/nvim-web-devicons'
+	Plug 'romgrk/barbar.nvim'
+
 
 endif
 call plug#end()
-
 set updatetime=300
 
 " CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
@@ -70,44 +79,51 @@ inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" wrap existing omnifunc
-" Note that omnifunc does not run in background and may probably block the
-" editor. If you don't want to be blocked by omnifunc too often, you could
-" add 180ms delay before the omni wrapper:
-"  'on_complete': ['ncm2#on_complete#delay', 180,
-"               \ 'ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-au User Ncm2Plugin call ncm2#register_source({
-			\ 'name' : 'css',
-			\ 'priority': 9,
-			\ 'subscope_enable': 1,
-			\ 'scope': ['css','scss'],
-			\ 'mark': 'css',
-			\ 'word_pattern': '[\w\-]+',
-			\ 'complete_pattern': ':\s*',
-			\ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-			\ })
-
 " vim rooter
 let g:rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
-
-" ale
-"let b:ale_linters = {'rust': ['cargo', 'rls', 'rustc']}
-"let g:ale_fixers = {'rust': ['rustfmt', 'remove_trailing_lines', 'trim_whitespace']}
-"let g:ale_lint_on_save = 1
-"let g:ale_fix_on_save = 1
-"let g:rustfmt_autosave = 1
-"let g:ale_shell = '/bin/bash'
 
 " neoterm
 set nocompatible
 let &runtimepath.=',~/.vim/bundle/neoterm'
 
-" nerdtree
+"" nerdtree
+" set nerdtree to open with leader v
 map <C-n> :NERDTreeToggle <CR>
 
+" make it always open on the right
+let g:NERDTreeWinPos = "right"
+
+" change default arrows
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+
+" open nerdtree automatically if vim is started with no args
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree |  endif
+
+" open the same nerdtree on every tab
+autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+
+" make vim close completely when nerdtree is the last pane open
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" stop other files voring nerdtree
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+" bookmark stuffz
 let NERDTreeShowBookmarks=1
+
+" barbar
+let bufferline = get(g:, 'bufferline', {})
+let bufferline.auto_hide = v:true
+
+" Configure icons on the bufferline.
+let bufferline.icon_separator_active = '▎'
+let bufferline.icon_separator_inactive = '▎'
+let bufferline.icon_close_tab = ''
+let bufferline.icon_close_tab_modified = '+'
+let bufferline.icon_pinned = '車'
 
 ""==================================================================""
 " Filetypes
@@ -133,19 +149,19 @@ au BufRead *.tex
 			\ set tabstop=2 |
 			\ colorscheme tir_black
 
-au BufRead,BufNewFile *.love
-			\ set syntax=lua
-
 ""==================================================================""
 " Colorschemes
-colorscheme maui
-colorscheme minimalist
+"colorscheme maui
+"colorscheme minimalist
+"colorscheme seoul256
 "colorscheme zellner
 "colorscheme adventurous
 "colorscheme asmdev
 "colorscheme delphi
 "colorscheme buttercream
 "colorscheme kolor
+"colorscheme seattle
+colorscheme kolor
 map <F7> :PrevColorScheme<CR>
 map <F8> :NextColorScheme<CR>
 map <F9> :RandomColorScheme<CR>
@@ -173,6 +189,9 @@ endfunction
 
 " Use auocmd to force lightline update.
 autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
+
+" neovide
+let g:neovide_cursor_vfx_mode = "wireframe"
 
 ""==================================================================""
 " basics
@@ -203,14 +222,15 @@ autocmd StdinReadPre * let s:std_in=1
 set splitright
 set autoread
 
+" Decent wildmenu
+set wildmenu
+set wildmode=list:longest
+set wildignore=.hg,.svn,*~,*.png,*.jpg,*.gif,*.settings,Thumbs.db,*.min.js,*.swp,publish/*,intermediate/*,*.o,*.hi,Zend,vendor
+
 " coc
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" 'Smart' nevigation
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
@@ -219,90 +239,8 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Use <c-.> to trigger completion.
-inoremap <silent><expr> <c-.> coc#refresh()
+let g:coc_snippet_next = '<tab>'
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-:cd
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-
-" Introduce function text object
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-
-" Use <TAB> for selections ranges.
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-
-" Find symbol of current document.
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-
-" Search workspace symbols.
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-
-" Implement methods for trait
-nnoremap <silent> <space>i  :call CocActionAsync('codeAction', '', 'Implement missing members')<cr>
-
-" Show actions available at this location
-nnoremap <silent> <space>a  :CocAction<cr>
-
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Brighter comments
-"call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
-"call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
@@ -314,9 +252,9 @@ else
 endif
 
 " Very magic by default
-nnoremap ? ?\v
-nnoremap / /\v
-cnoremap %s/ %sm/
+"nnoremap ? ?\v
+"nnoremap / /\v
+"cnoremap %s/ %sm/
 
 " Proper search
 set incsearch
@@ -439,10 +377,15 @@ autocmd FileType lua map <F3> :wa <bar> !love .<CR>
 autocmd FileType moon map <leader>b :w <bar> !moon %:t<CR>
 autocmd FileType moon map <leader>n :w <bar> !moonc %:t<CR>
 
+" python
+""""""""""""""""""""""""""""""""
+autocmd FileType python map <leader>b :w <bar> !python3 %:t<CR>
+
 " rust
 """"""""""""""""""""""""""""""""
 " cargo
-autocmd FileType rust map <leader>v :w <bar> !cargo check<CR>
+autocmd FileType rust map <leader>c :w <bar> !cargo check<CR>
+autocmd FileType rust map <leader>v :w <bar> !cargo test<CR>
 autocmd FileType rust map <leader>b :w <bar> !cargo build<CR>
 autocmd FileType rust map <leader>n :w <bar> !cargo run<CR>
 " rustc

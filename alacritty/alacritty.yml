@@ -7,8 +7,10 @@ window:
     lines: 24
 
   padding:
-    x: 2
-    y: 2
+    x: 0
+    y: 0
+
+  dynamic_padding: true
 
 font:
   normal:
@@ -34,7 +36,7 @@ font:
 cursor_style: Beam
 
 # Background opacity
-background_opacity: 0.9
+background_opacity: 0.85
 
 # Keybinds
 mouse_bindings:
@@ -74,30 +76,32 @@ window.dynamic_title: true
 colors:
   # Default colors
   primary:
-    background: '0x1b1918'
-    foreground: '0xa8a19f'
+    background: '0x333333'
+    foreground: '0xcccccc'
 
   # Normal colors
   normal:
-    black:   '0x1b1918'
-    red:     '0xf22c40'
-    green:   '0x5ab738'
-    yellow:  '0xd5911a'
-    blue:    '0x407ee7'
-    magenta: '0x6666ea'
-    cyan:    '0x00ad9c'
-    white:   '0xa8a19f'
+    black:   '0x666666'
+    red:     '0xcc6699'
+    green:   '0x99cc66'
+    yellow:  '0xcc9966'
+    blue:    '0x6699cc'
+    magenta: '0x9966cc'
+    cyan:    '0x66cc99'
+    white:   '0xcccccc'
 
   # Bright colors
   bright:
-    black:   '0x766e6b'
-    red:     '0xf22c40'
-    green:   '0x5ab738'
-    yellow:  '0xd5911a'
-    blue:    '0x407ee7'
-    magenta: '0x6666ea'
-    cyan:    '0x00ad9c'
-    white:   '0xf1efee'
+    black:   '0x999999'
+    red:     '0xff99cc'
+    green:   '0xccff99'
+    yellow:  '0xffcc99'
+    blue:    '0x99ccff'
+    magenta: '0xcc99ff'
+    cyan:    '0x99ffcc'
+    white:   '0xffffff'
+
+
 
 key_bindings:
   - { key: V,        mods: Alt,     action: Paste           }

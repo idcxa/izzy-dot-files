@@ -10,30 +10,30 @@ case $1 in
 		then
 			echo $(( 852 )) > $bd
 		else
-                        for i in {1..25}
-                        do
-                            echo $(( bdv + 1 )) > $bd
-                        done
+			for i in {1..25}
+			do
+				echo $(( bdv + 1 )) > $bd
+			done
 		fi
 		cat $bd
-	;;
+		;;
 	down)
 		if [ $bdv -lt 101 ]
 		then
 			echo $(( 1 )) > $bd
 		else
-			echo $(( bdv - 25 )) > $bd
+			echo $(( bdv * 0.8 )) > $bd
 		fi
 		cat $bd
-	;;
+		;;
 	max)
 		echo $(( 852 )) > $bd
 		cat $bd
-	;;
+		;;
 	min)
 		echo $(( 1 )) > $bd
 		cat $bd
-	;;
+		;;
 	*)
-	echo "$bdv"
+		echo "$bdv"
 esac
