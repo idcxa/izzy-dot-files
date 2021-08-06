@@ -5,8 +5,9 @@
 !alacritty/**
 !scripts/**
 !.gitignore
+!awesome/**
+!fuck/**
 !README.md
 discord/**
 google-chrome/**
 chromium/**
-awesome/**
