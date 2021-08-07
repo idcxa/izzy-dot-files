@@ -14,9 +14,10 @@ local math, string, os = math, string, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
-theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/izzy"
+theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/izzywibar"
 theme.wallpaper                                 = theme.dir .. "/wallpaper.jpg"
 theme.font                                      = "Fira Code 12"
+theme.iconfont									= "Fira Code 30"
 theme.taglist_font                              = "Fira Code Italic 11"
 theme.fg_normal                                 = "#ffffff"
 theme.fg_focus                                  = color1
@@ -61,7 +62,7 @@ theme.widget_battery_empty                      = theme.dir .. "/icons/battery_e
 theme.widget_mem                                = theme.dir .. "/icons/mem.png"
 theme.widget_cpu                                = theme.dir .. "/icons/cpu.png"
 theme.widget_temp                               = theme.dir .. "/icons/temp.png"
-theme.widget_net                                = theme.dir .. "/icons/net.png"
+theme.widget_net								= theme.dir .. "/icons/net.png"
 theme.widget_hdd                                = theme.dir .. "/icons/hdd.png"
 theme.widget_music                              = theme.dir .. "/icons/note.png"
 theme.widget_music_on                           = theme.dir .. "/icons/note.png"
@@ -103,11 +104,24 @@ local separators = lain.util.separators
 
 
 -- Textclock
-local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
-    "date +'%a %d %b %R'", 60,
+    "date +'%e, %b %Y - %R'", 60,
     function(widget, stdout)
-        widget:set_markup(" " .. markup.font(theme.font, stdout))
+        widget:set_markup("" .. markup.font(theme.font, stdout))
+    end
+)
+
+local batteryicon = awful.widget.watch(
+    os.getenv("HOME").."/.config/scripts/battery.rb icon", 60,
+    function(widget, stdout)
+        widget:set_markup(" " .. markup.font(theme.iconfont, stdout))
+    end
+)
+
+local batterypercent = awful.widget.watch(
+    os.getenv("HOME").."/.config/scripts/battery.rb percent", 60,
+    function(widget, stdout)
+        widget:set_markup("" .. markup.font(theme.font, stdout))
     end
 )
 
@@ -115,44 +129,11 @@ local clock = awful.widget.watch(
 theme.cal = lain.widget.cal({
     attach_to = { clock },
     notification_preset = {
-        font = "Mononoki Nerd Font 11",
+        font = theme.font,
         fg   = theme.fg_normal,
         bg   = theme.bg_normal
     }
 })
-
-
-
--- Taskwarrior
---local task = wibox.widget.imagebox(theme.widget_task)
---lain.widget.contrib.task.attach(task, {
-    -- do not colorize output
---    show_cmd = "task | sed -r 's/\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g'"
---})
---task:buttons(gears.table.join(awful.button({}, 1, lain.widget.contrib.task.prompt)))
-
-
-
--- Mail IMAP check
-local mailicon = wibox.widget.imagebox(theme.widget_mail)
---[[ commented because it needs to be set before use
-mailicon:buttons(my_table.join(awful.button({ }, 1, function () awful.spawn(mail) end)))
-theme.mail = lain.widget.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    settings = function()
-        if mailcount > 0 then
-            widget:set_text(" " .. mailcount .. " ")
-            mailicon:set_image(theme.widget_mail_on)
-        else
-            widget:set_text("")
-            mailicon:set_image(theme.widget_mail)
-        end
-    end
-})
---]]
 
 -- ALSA volume
 theme.volume = lain.widget.alsabar({
@@ -263,23 +244,7 @@ theme.fs = lain.widget.fs({
 local baticon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat({
     settings = function()
-        if bat_now.status and bat_now.status ~= "N/A" then
-            if bat_now.ac_status == 1 then
-                widget:set_markup(markup.font(theme.font, " AC "))
-                baticon:set_image(theme.widget_ac)
-                return
-            elseif not bat_now.perc and tonumber(bat_now.perc) <= 5 then
-                baticon:set_image(theme.widget_battery_empty)
-            elseif not bat_now.perc and tonumber(bat_now.perc) <= 15 then
-                baticon:set_image(theme.widget_battery_low)
-            else
-                baticon:set_image(theme.widget_battery)
-            end
-            widget:set_markup(markup.font(theme.font, " " .. bat_now.perc .. "% "))
-        else
-            widget:set_markup()
-            baticon:set_image(theme.widget_ac)
-        end
+        widget:set_markup(markup.font(theme.font, "yay"))
     end
 })
 
@@ -287,16 +252,6 @@ local bat = lain.widget.bat({
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa({
     settings = function()
-        if volume_now.status == "off" then
-            volicon:set_image(theme.widget_vol_mute)
-        elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(theme.widget_vol_no)
-        elseif tonumber(volume_now.level) <= 50 then
-            volicon:set_image(theme.widget_vol_low)
-        else
-            volicon:set_image(theme.widget_vol)
-        end
-
         widget:set_markup(markup.font(theme.font, " " .. volume_now.level .. "% "))
     end
 })
@@ -371,8 +326,8 @@ function theme.at_screen_connect(s)
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 30, bg = theme.bg_normal, fg = theme.fg_normal })
 
-	local color1 = "#FF79C6"
-	local color2 = "#9686C3"
+	local color2 = "#FF79C6"
+	local color1 = "#9686C3"
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
@@ -415,12 +370,14 @@ function theme.at_screen_connect(s)
             arrow(color2, color1),
             wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), color1),
             arrow(color1, color2),
-            wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), color2),
+            wibox.container.background(wibox.container.margin(batteryicon, 4, 8), color2),
+            wibox.container.background(wibox.container.margin(batterypercent, 4, 8), color2),
+            --wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), color2),
+            --arrow(color2, color1),
+            --wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, , 3), color1),
             arrow(color2, color1),
-            wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, 3, 3), color1),
-            arrow(color1, color2),
-            wibox.container.background(wibox.container.margin(clock, 4, 8), color2),
-            arrow(color2, "alpha"),
+            wibox.container.background(wibox.container.margin(clock, 4, 8), color1),
+            arrow(color1, "alpha"),
             --]]
             s.mylayoutbox,
         },

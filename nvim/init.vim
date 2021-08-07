@@ -372,6 +372,9 @@ autocmd FileType elixir map <F5> :w <bar> !elixir %:t<CR>
 """"""""""""""""""""""""""""""""
 autocmd FileType lua map <F3> :wa <bar> !love .<CR>
 
+" ruby
+autocmd FileType ruby map <F5> :wa <bar> !./%:t<CR>
+
 " moonscript
 """"""""""""""""""""""""""""""""
 autocmd FileType moon map <leader>b :w <bar> !moon %:t<CR>
