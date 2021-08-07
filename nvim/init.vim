@@ -116,14 +116,36 @@ let NERDTreeShowBookmarks=1
 
 " barbar
 let bufferline = get(g:, 'bufferline', {})
+let bufferline.animation = v:true
 let bufferline.auto_hide = v:true
+let bufferline.tabpages = v:false
+let bufferline.closable = v:true
 
-" Configure icons on the bufferline.
+let bufferline.clickable = v:true
+let bufferline.icon_custom_colors = v:false
+let bufferline.insert_at_end = v:true
 let bufferline.icon_separator_active = '▎'
 let bufferline.icon_separator_inactive = '▎'
 let bufferline.icon_close_tab = ''
-let bufferline.icon_close_tab_modified = '+'
+let bufferline.icon_close_tab_modified = ''
 let bufferline.icon_pinned = '車'
+
+" keybinds
+nnoremap <silent>    <C-p>		:BufferPin<CR>
+nnoremap <silent>    <C-w>		:BufferClose<CR>
+nnoremap <silent>    <C-t>		:tabnew <Bar> :NERDTreeFocus<CR> <C-w>h
+nnoremap <silent>    <A-left>	:BufferMovePrevious<CR>
+nnoremap <silent>    <A-right>	:BufferMoveNext<CR>
+
+nnoremap <silent>    <A-1>		:BufferGoto 1<CR>
+nnoremap <silent>    <A-2> 		:BufferGoto 2<CR>
+nnoremap <silent>    <A-3> 		:BufferGoto 3<CR>
+nnoremap <silent>    <A-4> 		:BufferGoto 4<CR>
+nnoremap <silent>    <A-5> 		:BufferGoto 5<CR>
+nnoremap <silent>    <A-6> 		:BufferGoto 6<CR>
+nnoremap <silent>    <A-7> 		:BufferGoto 7<CR>
+nnoremap <silent>    <A-8> 		:BufferGoto 8<CR>
+nnoremap <silent>    <A-9> 		:BufferLast<CR>
 
 ""==================================================================""
 " Filetypes
@@ -151,6 +173,7 @@ au BufRead *.tex
 
 ""==================================================================""
 " Colorschemes
+set termguicolors "set nice colours
 "colorscheme maui
 "colorscheme minimalist
 "colorscheme seoul256
@@ -161,14 +184,11 @@ au BufRead *.tex
 "colorscheme buttercream
 "colorscheme kolor
 "colorscheme seattle
-colorscheme kolor
+colorscheme izzy
 map <F7> :PrevColorScheme<CR>
 map <F8> :NextColorScheme<CR>
 map <F9> :RandomColorScheme<CR>
 
-highlight MatchParen cterm=bold ctermfg=208 ctermbg=233 gui=italic guifg=#121212 guibg=#ff8700
-
-" lightline
 set noshowmode
 " Lightline
 let g:lightline = {
@@ -212,7 +232,7 @@ cnoremap jk <C-C>
 nnoremap c "_c
 set nocompatible
 filetype plugin on
-syntax on
+"syntax on " breaks MatchParen highlighting
 set encoding=utf-8
 set number " relativenumber
 set undodir=~/.vimdid
@@ -302,9 +322,13 @@ map L $
 " No arrow keys --- force yourself to use the home row
 nnoremap <up> <nop>
 nnoremap <down> <nop>
+vnoremap <up> <nop>
+vnoremap <down> <nop>
 " Left and right can switch buffers
 nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
+vnoremap <left> :bp<CR>
+vnoremap <right> :bn<CR>
 
 " Move by line
 nnoremap j gj
@@ -473,4 +497,17 @@ autocmd FileType bib inoremap ,a @article{<Enter>author<Space>=<Space>{<++>},<En
 autocmd FileType bib inoremap ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
 autocmd FileType bib inoremap ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
 
-
+function! TabMessage(cmd)
+  redir => message
+  silent execute a:cmd
+  redir END
+  if empty(message)
+    echoerr "no output"
+  else
+    " use "new" instead of "tabnew" below if you prefer split windows instead of tabs
+    tabnew
+    setlocal buftype=nofile bufhidden=wipe noswapfile nobuflisted nomodified
+    silent put=message
+  endif
+endfunction
+command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
