@@ -1,0 +1,4 @@
+lua.update
+lua.version
+extensions.forceUpdateAll
+rls.restart

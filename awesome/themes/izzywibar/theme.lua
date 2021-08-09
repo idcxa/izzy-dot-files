@@ -28,7 +28,7 @@ theme.bg_urgent                                 = "#3F3F3F"
 theme.taglist_fg_focus                          = "#282a36"
 theme.tasklist_bg_focus                         = "#000000"
 theme.tasklist_fg_focus                         = color1
-theme.border_width                              = 1
+theme.border_width                              = 2
 theme.border_normal                             = "#282a36"
 theme.border_focus                              = theme.bg_focus
 theme.border_marked                             = "#CC9393"
@@ -110,21 +110,6 @@ local clock = awful.widget.watch(
         widget:set_markup("" .. markup.font(theme.font, stdout))
     end
 )
-
-local batteryicon = awful.widget.watch(
-    os.getenv("HOME").."/.config/scripts/battery.rb icon", 60,
-    function(widget, stdout)
-        widget:set_markup(" " .. markup.font(theme.iconfont, stdout))
-    end
-)
-
-local batterypercent = awful.widget.watch(
-    os.getenv("HOME").."/.config/scripts/battery.rb percent", 60,
-    function(widget, stdout)
-        widget:set_markup("" .. markup.font(theme.font, stdout))
-    end
-)
-
 -- Calendar
 theme.cal = lain.widget.cal({
     attach_to = { clock },
@@ -135,63 +120,35 @@ theme.cal = lain.widget.cal({
     }
 })
 
+local battery = awful.widget.watch(
+    os.getenv("HOME").."/.config/scripts/battery.rb", 60,
+    function(widget, stdout)
+        widget:set_markup(" " .. markup.font(theme.font, stdout))
+    end
+)
+
+-- CPU
+local cpu = awful.widget.watch(
+    os.getenv("HOME").."/.config/scripts/cpu.sh", 60,
+    function(widget, stdout)
+        widget:set_markup(" " .. markup.font(theme.font, stdout))
+    end
+)
+
+-- MEM
+local mem = awful.widget.watch(
+    os.getenv("HOME").."/.config/scripts/mem.sh", 60,
+    function(widget, stdout)
+        widget:set_markup(" " .. markup.font(theme.font, stdout) .. "fuck")
+    end
+)
+
 -- ALSA volume
 theme.volume = lain.widget.alsabar({
     --togglechannel = "IEC958,3",
     notification_preset = { font = theme.font, fg = theme.fg_normal },
 })
 
--- MPD
-local musicplr = "urxvt -title Music -g 130x34-320+16 -e ncmpcpp"
-local mpdicon = wibox.widget.imagebox(theme.widget_music)
-mpdicon:buttons(my_table.join(
-    awful.button({ modkey }, 1, function () awful.spawn.with_shell(musicplr) end),
-    --[[awful.button({ }, 1, function ()
-        awful.spawn.with_shell("mpc prev")
-        theme.mpd.update()
-    end),
-    --]]
-    awful.button({ }, 2, function ()
-        awful.spawn.with_shell("mpc toggle")
-        theme.mpd.update()
-    end),
-    awful.button({ modkey }, 3, function () awful.spawn.with_shell("pkill ncmpcpp") end),
-    awful.button({ }, 3, function ()
-        awful.spawn.with_shell("mpc stop")
-        theme.mpd.update()
-    end)))
-theme.mpd = lain.widget.mpd({
-    settings = function()
-        if mpd_now.state == "play" then
-            artist = " " .. mpd_now.artist .. " "
-            title  = mpd_now.title  .. " "
-            mpdicon:set_image(theme.widget_music_on)
-            widget:set_markup(markup.font(theme.font, markup("#ff00ff", artist) .. " " .. title))
-        elseif mpd_now.state == "pause" then
-            widget:set_markup(markup.font(theme.font, " mpd paused "))
-            mpdicon:set_image(theme.widget_music_pause)
-        else
-            widget:set_text("")
-            mpdicon:set_image(theme.widget_music)
-        end
-    end
-})
-
--- MEM
-local memicon = wibox.widget.imagebox(theme.widget_mem)
-local mem = lain.widget.mem({
-    settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. mem_now.used .. "MB "))
-    end
-})
-
--- CPU
-local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
-local cpu = lain.widget.cpu({
-    settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. cpu_now.usage .. "% "))
-    end
-})
 
 --[[ Coretemp (lm_sensors, per core)
 local tempwidget = awful.widget.watch({awful.util.shell, '-c', 'sensors | grep Core'}, 30,
@@ -239,14 +196,6 @@ theme.fs = lain.widget.fs({
     end
 })
 --]]
-
--- Battery
-local baticon = wibox.widget.imagebox(theme.widget_battery)
-local bat = lain.widget.bat({
-    settings = function()
-        widget:set_markup(markup.font(theme.font, "yay"))
-    end
-})
 
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
@@ -324,10 +273,12 @@ function theme.at_screen_connect(s)
     --s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 30, bg = theme.bg_normal, fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = 30, bg = theme.bg_normal.."d5", fg = theme.fg_normal })
+	--s.mywibox = awful.wibar({ position = "bottom", screen = s, height = 30, bg = theme.bg_normal .. "55" })
 
-	local color2 = "#FF79C6"
-	local color1 = "#9686C3"
+	local color1 = "#FF79C6"
+	local color2 = "#9686C3"
+	--beautiful.bg_systray = color2
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
@@ -341,7 +292,6 @@ function theme.at_screen_connect(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            wibox.widget.systray(),
             --[[ using shapes
             pl(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, "#343434"),
             pl(task, "#343434"),
@@ -357,27 +307,36 @@ function theme.at_screen_connect(s)
             -- using separators
             --arrow(theme.bg_normal, "#343434"),
            -- wibox.container.background(wibox.container.margin(wibox.widget { mailicon, mail and mail.widget, layout = wibox.layout.align.horizontal }, 4, 7), "#343434"),
-            arrow("alpha", color2),
-            wibox.container.background(wibox.container.margin(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, 3, 6), color2),
+            arrow("alpha", color1),
+            arrow(color1, color2),
+            arrow(color2, color1),
+            arrow(color1, color2),
+            --wibox.container.background(wibox.container.margin(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, 3, 6), color2),
             arrow(color2, color1),
             wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 3), color1),
             arrow(color1, color2),
-            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 3), color2),
+            wibox.container.background(wibox.container.margin(mem, 4, 8), color2),
+            --wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 3), color2),
             arrow(color2, color1),
-            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 3, 4), color1),
+            wibox.container.background(wibox.container.margin(cpu, 4, 8), color1),
+            --wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 3, 4), color1),
+            --arrow(color1, color2),
+            --wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 4), color2),
+            --arrow(color2, color1),
+            --wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), color1),
             arrow(color1, color2),
-            wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 4), color2),
-            arrow(color2, color1),
-            wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), color1),
-            arrow(color1, color2),
-            wibox.container.background(wibox.container.margin(batteryicon, 4, 8), color2),
-            wibox.container.background(wibox.container.margin(batterypercent, 4, 8), color2),
+            wibox.container.background(wibox.container.margin(battery, 4, 8), color2),
+            --wibox.container.background(wibox.container.margin(batterypercent, 4, 8), color2),
             --wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), color2),
             --arrow(color2, color1),
             --wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, , 3), color1),
             arrow(color2, color1),
             wibox.container.background(wibox.container.margin(clock, 4, 8), color1),
-            arrow(color1, "alpha"),
+            arrow(color1, color2),
+            wibox.container.background(wibox.container.margin(nil, 4, 8), color2),
+            wibox.widget.systray(),
+            wibox.container.background(wibox.container.margin(nil, 4, 4), color2),
+            arrow(color2, "alpha"),
             --]]
             s.mylayoutbox,
         },

@@ -51,7 +51,7 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "unclutter -root -idle 3", "compton -b" }) -- entries must be comma-separated
+run_once({ "unclutter -root -idle 3", "kilall -q compton; compton -b --backend glx --paint-on-overlay --vsync opengl-swc" }) -- entries must be comma-separated
 --run_once({ "killall -q polybar; polybar izzy" })
 
 local themes = {
@@ -164,6 +164,10 @@ lain.layout.cascade.tile.nmaster       = 5
 lain.layout.cascade.tile.ncol          = 2
 
 beautiful.init(string.format(gears.filesystem.get_configuration_dir() .. "/themes/%s/theme.lua", chosen_theme))
+local color2 = "#FF79C6"
+local color1 = "#9686C3"
+
+beautiful.bg_systray = color1
 
 local myawesomemenu = {
     { "hotkeys", function() return false, hotkeys_popup.show_help end },
@@ -215,12 +219,18 @@ root.buttons(my_table.join(
 globalkeys = my_table.join(
 
     -- {{{ Personal keybindings
-    -- dmenu
+    -- rofi
     awful.key({ modkey }, "d",
     function ()
         awful.spawn(string.format("/home/izzy/.config/rofi/launchers/text/launcher.sh"))
 	end,
     {description = "rofi", group = "hotkeys"}),
+	-- firefox
+    awful.key({ modkey }, "w",
+    function ()
+        awful.spawn(string.format("firefox"))
+	end,
+    {description = "firefox", group = "hotkeys"}),
 
     -- My dmenu scripts (Alt+Ctrl+Key)
     awful.key({ altkey, "Control" }, "e", function () awful.util.spawn( "./.dmenu/dmenu-edit-configs.sh" ) end,
@@ -379,9 +389,6 @@ globalkeys = my_table.join(
             {description = "focus right", group = "client"}),
 
 
-
-    awful.key({ modkey,           }, "w", function () awful.util.mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
@@ -849,7 +856,7 @@ client.connect_signal("focus", border_adjust)
 client.connect_signal("property::maximized", border_adjust)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
-awful.spawn.with_shell("nitrogen --restore")
-awful.spawn.with_shell("picom --config  $HOME/.config/picom/picom.conf")
+--awful.spawn.with_shell("nitrogen --restore")
+awful.spawn.with_shell("killall -q picom; picom --experimental-backends --blur-background --blur-method gaussian --detect-client-leader --detect-client-opacity")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("volumeicon")

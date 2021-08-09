@@ -5,20 +5,16 @@ bat2 = File.read('/sys/class/power_supply/BAT1/capacity').to_i
 
 bat = (bat1+bat2)/2
 
-if ARGV[0] == "percent"
-  puts(bat.to_s + "%")
-  return
-elsif ARGV[0] == "icon"
-  if bat < 13
-    puts('')
-  elsif bat < 38
-    puts('')
-  elsif bat < 63
-    puts('')
-  elsif bat < 83
-    puts('')
-  else
-    puts('')
-  end
+if bat < 13
+  print(' ')
+elsif bat < 38
+  print(' ')
+elsif bat < 63
+  print(' ')
+elsif bat < 83
+  print(' ')
+else
+  print(' ')
 end
 
+print(bat.to_s + "%")

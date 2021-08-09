@@ -7,8 +7,8 @@ window:
     lines: 24
 
   padding:
-    x: 0
-    y: 0
+    x: 2
+    y: 2
 
   dynamic_padding: true
 
@@ -29,14 +29,14 @@ font:
     family: Fira Code Light
     style: Bold Italic
 
-  size: 16
+  size: 10
   scale_with_dpi: true
   use_thin_strokes: false
 
 cursor_style: Beam
 
 # Background opacity
-background_opacity: 0.85
+background_opacity: 0.95
 
 # Keybinds
 mouse_bindings:
@@ -76,7 +76,7 @@ window.dynamic_title: true
 colors:
   # Default colors
   primary:
-    background: '0x333333'
+    background: '0x2e2d2b'
     foreground: '0xcccccc'
 
   # Normal colors
