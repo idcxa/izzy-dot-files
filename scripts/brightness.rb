@@ -1,13 +1,24 @@
 #!/usr/bin/env ruby
+# a smooth logarithmic brightness script using brightnessctl
+
 v = ARGV[0]
 
-s = ((`brightnessctl get`.to_i)/10).ceil
+s = (`brightnessctl get`.to_i / 3).ceil
 
-for i in 1..s do
-  if v == "up"
-    system("brightnessctl set +1")
-  elsif v == "down"
-    system("brightnessctl set 1-")
+p s
+
+if v == 'up'
+  system('brightnessctl set +1')
+  s.times do
+    sleep(0.001)
+    system('brightnessctl set +1')
   end
 end
 
+if v == 'down'
+  system('brightnessctl set 1-')
+  s.times do
+    sleep(0.001)
+    system('brightnessctl set 1-')
+  end
+end

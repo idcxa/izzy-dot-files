@@ -7,9 +7,10 @@ if exists("syntax_on")
   syntax reset
 endif
 
-let g:colors_name = "1989"
+let g:colors_name = "izzy"
 
 let s:dark_gray = [236, "#2e2d2b"]
+let s:darkish_gray = [236, "#3d3b3d"]
 let s:mid_gray = [102, "#878787"]
 let s:default_white = [231, "#FFFFFF"]
 let s:magenta = [231, "#FF00FF"]
@@ -52,8 +53,7 @@ call <SID>set_hi("MatchParen", s:pink, s:none, "italic")
 hi MatchParen guifg=#ffafdf guibg=NONE gui=NONE
 call <SID>set_hi("StatusLine", s:default_white, s:mid_gray, "bold")
 call <SID>set_hi("StatusLineNC", s:default_white, s:mid_gray, "NONE")
-call <SID>set_hi("Pmenu", s:dark_gray, s:pink, "NONE")
-
+call <SID>set_hi("Pmenu", s:pink, s:darkish_gray, "NONE")
 
 call <SID>set_hi("PmenuSel", s:none, s:dark_gray, "NONE")
 call <SID>set_hi("IncSearch", s:dark_gray, s:light_yellow, "NONE")

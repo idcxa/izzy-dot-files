@@ -10,7 +10,7 @@ show_always = true
 
 # Replace the "❯" symbol in the prompt with "➜"
 [character]                            # The name of the module we are configuring is "character"
-success_symbol = "[♡ ❯](red)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
+success_symbol = "[x❯](bold purple)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
 
 [hostname]
 ssh_only = false

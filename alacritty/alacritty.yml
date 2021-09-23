@@ -14,7 +14,7 @@ window:
 
 font:
   normal:
-    family: Fira Code Light
+    family: Fira Code
     style: Light
 
   bold:
@@ -29,7 +29,7 @@ font:
     family: Fira Code Light
     style: Bold Italic
 
-  size: 10
+  size: 9
   scale_with_dpi: true
   use_thin_strokes: false
 

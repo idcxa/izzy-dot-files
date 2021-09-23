@@ -18,6 +18,7 @@ naughty.config.defaults['icon_size'] = 100
 local lain          = require("lain")
 local freedesktop   = require("freedesktop")
 
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 local hotkeys_popup = require("awful.hotkeys_popup").widget
@@ -67,6 +68,7 @@ local chosen_theme = themes[2]
 local theme_path = string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme)
 beautiful.init(theme_path)
 
+
 local modkey       = "Mod4"
 local altkey       = "Mod1"
 local modkey1      = "Control"
@@ -74,9 +76,8 @@ local modkey1      = "Control"
 -- personal variables
 local browser           = "firefox"
 local editor            = os.getenv("EDITOR") or "nvim"
-local editorgui         = "geany"
+local editorgui         = "alacritty -e nvim"
 local filemanager       = "pcmanfm"
-local mailclient        = "geary"
 local mediaplayer       = "mpv"
 local scrlocker         = "slock"
 local terminal          = "alacritty"
@@ -84,19 +85,18 @@ local virtualmachine    = "virtualbox"
 
 -- awesome variables
 awful.util.terminal = terminal
---awful.util.tagnames = {  " ", " ", " ", " ", " ", " ", " ", " ", " ", " "  }
 awful.util.tagnames = { " I ", " II ", " III ", " IV ", " V ", " VI ", " VII ", " VIII ", " IX " }
 awful.layout.suit.tile.left.mirror = true
 awful.layout.layouts = {
     awful.layout.suit.tile,
     awful.layout.suit.floating,
-    --awful.layout.suit.tile.left,
+    awful.layout.suit.tile.left,
     --awful.layout.suit.tile.bottom,
     --awful.layout.suit.tile.top,
     --awful.layout.suit.fair,
     --awful.layout.suit.fair.horizontal,
-    --awful.layout.suit.spiral,
-    --awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.spiral,
+    awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max,
     --awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
@@ -164,7 +164,7 @@ lain.layout.cascade.tile.nmaster       = 5
 lain.layout.cascade.tile.ncol          = 2
 
 beautiful.init(string.format(gears.filesystem.get_configuration_dir() .. "/themes/%s/theme.lua", chosen_theme))
-local color2 = "#FF79C6"
+--local color2 = "#FF79C6"
 local color1 = "#9686C3"
 
 beautiful.bg_systray = color1
@@ -303,8 +303,8 @@ globalkeys = my_table.join(
         {description = "go back", group = "tag"}),
 
      -- Tag browsing alt + tab
-    awful.key({ altkey,           }, "Tab",   awful.tag.viewnext,
-        {description = "view next", group = "tag"}),
+    --awful.key({ altkey,           }, "Tab",   awful.tag.viewnext,
+        --{description = "view next", group = "tag"}),
     awful.key({ altkey, "Shift"   }, "Tab",  awful.tag.viewprev,
         {description = "view previous", group = "tag"}),
 
@@ -401,7 +401,7 @@ globalkeys = my_table.join(
               {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
-    awful.key({ modkey1,           }, "Tab",
+    awful.key({ altkey,           }, "Tab",
         function ()
             awful.client.focus.history.previous()
             if client.focus then
@@ -661,6 +661,7 @@ root.keys(globalkeys)
 
 -- Rules to apply to new clients (through the "manage" signal).
 
+--[[
 client.connect_signal("manage", function (c)
     c.shape = gears.shape.rounded_rect
 end)
@@ -669,11 +670,17 @@ client.connect_signal("manage", function (c)
         gears.shape.rounded_rect(cr,w,h,6)
     end
 end)
+]]--
 
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
-      properties = { border_width = beautiful.border_width,
+      properties = {
+
+maximized_horizontal = false,
+maximized_vertical = false,
+maximized = false,
+          border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
                      raise = true,
@@ -858,5 +865,6 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 --awful.spawn.with_shell("nitrogen --restore")
 awful.spawn.with_shell("killall -q picom; picom --experimental-backends --blur-background --blur-method gaussian --detect-client-leader --detect-client-opacity")
+awful.spawn.with_shell("~/.config/scripts/disable_tapping.sh")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("volumeicon")
