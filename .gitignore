@@ -1,5 +1,1 @@
-nvim/**
-!nvim/init.vim
-!nvim/colors
-!nvim/coc-settings.json
 
