@@ -4,6 +4,7 @@
 " Absolute Essentials
 ""==================================================================""
 let mapleader =","
+let maplocalleader=","
 set clipboard+=unnamedplus
 
 source ~/.config/nvim/filetypes.vim
@@ -60,37 +61,48 @@ nmap <Leader>sl :<C-u>SessionLoad<CR>
 
 " barbar
 "================"
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.animation = v:true
-let bufferline.auto_hide = v:true
-let bufferline.tabpages = v:false
-let bufferline.closable = v:true
+"let bufferline = get(g:, 'bufferline', {})
+"let bufferline.animation = v:true
+"let bufferline.auto_hide = v:true
+"let bufferline.tabpages = v:false
+"let bufferline.closable = v:true
+"
+"let bufferline.clickable = v:true
+"let bufferline.icon_custom_colors = v:false
+"let bufferline.insert_at_end = v:true
+"let bufferline.icon_separator_active = '▎'
+"let bufferline.icon_separator_inactive = '▎'
+"let bufferline.icon_close_tab = ''
+"let bufferline.icon_close_tab_modified = '+'
+"let bufferline.icon_pinned = '車'
+"
+"" keybinds
+"nnoremap <silent>    <C-p>		:BufferPin<CR>
+"nnoremap <silent>    <C-w>		:BufferClose<CR>
+"nnoremap <silent>    <C-t>		:tabnew <Bar> :NERDTreeFocus<CR> <C-w>h
+"
+"nnoremap <silent>    <A-1>		:BufferGoto 1<CR>
+"nnoremap <silent>    <A-2> 		:BufferGoto 2<CR>
+"nnoremap <silent>    <A-3> 		:BufferGoto 3<CR>
+"nnoremap <silent>    <A-4> 		:BufferGoto 4<CR>
+"nnoremap <silent>    <A-5> 		:BufferGoto 5<CR>
+"nnoremap <silent>    <A-6> 		:BufferGoto 6<CR>
+"nnoremap <silent>    <A-7> 		:BufferGoto 7<CR>
+"nnoremap <silent>    <A-8> 		:BufferGoto 8<CR>
+"nnoremap <silent>    <A-9> 		:BufferLast<CR>
 
-let bufferline.clickable = v:true
-let bufferline.icon_custom_colors = v:false
-let bufferline.insert_at_end = v:true
-let bufferline.icon_separator_active = '▎'
-let bufferline.icon_separator_inactive = '▎'
-let bufferline.icon_close_tab = ''
-let bufferline.icon_close_tab_modified = '+'
-let bufferline.icon_pinned = '車'
+nnoremap <silent> <A-left>	:BufferlineMovePrevious<CR>
+nnoremap <silent> <A-right>	:BufferlineMoveNext<CR>
 
-" keybinds
-nnoremap <silent>    <C-p>		:BufferPin<CR>
-nnoremap <silent>    <C-w>		:BufferClose<CR>
-nnoremap <silent>    <C-t>		:tabnew <Bar> :NERDTreeFocus<CR> <C-w>h
-nnoremap <silent>    <A-left>	:BufferMovePrevious<CR>
-nnoremap <silent>    <A-right>	:BufferMoveNext<CR>
-
-nnoremap <silent>    <A-1>		:BufferGoto 1<CR>
-nnoremap <silent>    <A-2> 		:BufferGoto 2<CR>
-nnoremap <silent>    <A-3> 		:BufferGoto 3<CR>
-nnoremap <silent>    <A-4> 		:BufferGoto 4<CR>
-nnoremap <silent>    <A-5> 		:BufferGoto 5<CR>
-nnoremap <silent>    <A-6> 		:BufferGoto 6<CR>
-nnoremap <silent>    <A-7> 		:BufferGoto 7<CR>
-nnoremap <silent>    <A-8> 		:BufferGoto 8<CR>
-nnoremap <silent>    <A-9> 		:BufferLast<CR>
+nnoremap <silent><A-1> <Cmd>BufferLineGoToBuffer 1<CR>
+nnoremap <silent><A-2> <Cmd>BufferLineGoToBuffer 2<CR>
+nnoremap <silent><A-3> <Cmd>BufferLineGoToBuffer 3<CR>
+nnoremap <silent><A-4> <Cmd>BufferLineGoToBuffer 4<CR>
+nnoremap <silent><A-5> <Cmd>BufferLineGoToBuffer 5<CR>
+nnoremap <silent><A-6> <Cmd>BufferLineGoToBuffer 6<CR>
+nnoremap <silent><A-7> <Cmd>BufferLineGoToBuffer 7<CR>
+nnoremap <silent><A-8> <Cmd>BufferLineGoToBuffer 8<CR>
+nnoremap <silent><A-9> <Cmd>BufferLineGoToBuffer 9<CR>
 
 " coc
 inoremap <silent><expr> <TAB>
@@ -124,8 +136,8 @@ set termguicolors "set nice colours
 "colorscheme buttercream
 "colorscheme kolor
 "colorscheme seattle
-colorscheme izzy
-colorscheme hybrid_reverse
+"colorscheme izzy
+colorscheme palenight
 map <F7> :PrevColorScheme<CR>
 map <F8> :NextColorScheme<CR>
 map <F9> :RandomColorScheme<CR>
@@ -133,19 +145,50 @@ map <F9> :RandomColorScheme<CR>
 " lightline
 "================"
 let g:lightline = {
-			\ 'colorscheme': 'jellybeans',
+			\ 'colorscheme': 'palenight',
 			\ 'active': {
 			\   'left': [ [ 'mode', 'paste' ],
-			\             [ 'filename', 'gitbranch', 'readonly', 'cocstatus', 'modified' ] ]
+			\             [ 'filename', 'gitbranch', 'readonly', 'cocstatus' ] ]
 			\ },
+      \ 'component': {
+      \   'lineinfo': '%3l:%-2v%<',
+      \ },
 			\ 'component_function': {
-			\   'gitbranch': 'gitbranch#name',
+			\   'gitbranch': 'LightlineGitStatus',
 			\   'filename': 'LightlineFilename',
-			\   'cocstatus': 'coc#status'
+			\   'cocstatus': 'LightlineCocStatus'
 			\ },
 			\ }
+
+lua << EOF
+	function _G.gitstatus()
+		status = vim.api.nvim_exec("echo get(g:, 'coc_git_status', '')", true)
+		changes = vim.api.nvim_exec("echo get(b:, 'coc_git_status', '')", true)
+		hi = "hi from lua"
+		return status:gsub("%*●", ""):gsub("…", "") .. changes:gsub("%  ", " ")
+	end
+EOF
+
+function! LightlineGitStatus() abort
+	let lua = v:lua.gitstatus()
+  return lua
+endfunction
+
 function! LightlineFilename()
-	return expand('%:t') !=# '' ? @% : '[No Name]'
+	let filename = expand('%:t') !=# '' ? @% : '[No Name]'
+	let modified = &modified ? ' +' : ''
+  return filename . modified
+endfunction
+
+function! LightlineGitBlame() abort
+  let blame = get(b:, 'coc_git_blame', '')
+  " return blame
+  return winwidth(0) > 120 ? blame : ''
+endfunction
+
+function! LightlineCocStatus() abort
+  let status = coc#status()
+  return winwidth(0) > 120 ? status : ''
 endfunction
 
 " Use auocmd to force lightline update.
@@ -165,6 +208,11 @@ function! ShowAll()
 endfunction
 
 autocmd FileType dashboard :call HideAll() | autocmd WinLeave <buffer> :call ShowAll()
+
+augroup highlight_yank
+    autocmd!
+    au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=500}
+augroup END
 
 " Essentials
 ""==================================================================""
@@ -240,6 +288,11 @@ if has("nvim-0.5.0") || has("patch-8.1.1564")
   set signcolumn=number
 else
   set signcolumn=yes
+endif
+
+if (has("nvim"))
+  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
 " Very magic by default
