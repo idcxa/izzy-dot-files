@@ -12,7 +12,7 @@ local terminal = "alacritty"
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/izzywibar"
-theme.wallpaper                                 = theme.dir .. "/ramiel.png"
+theme.wallpaper                                 = theme.dir .. "/fractal.png"
 theme.font                                      = "Fira Code 12"
 theme.iconfont									= "Fira Code 30"
 theme.taglist_font                              = "Fira Code Italic 11"

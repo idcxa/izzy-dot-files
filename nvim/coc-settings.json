@@ -15,6 +15,7 @@
     "javascriptreact",
     "typescript",
     "typescriptreact",
+    "jinja",
     "rust",
     "json",
     "jsonc"

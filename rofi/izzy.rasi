@@ -1,5 +1,10 @@
 /* colors */
 
+element-text, element-icon {
+    background-color: inherit;
+    text-color:       inherit;
+}
+
 * {
   al:      #00000000;
   bg:      #333232ff;

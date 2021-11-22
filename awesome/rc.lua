@@ -403,7 +403,8 @@ globalkeys = my_table.join(
               {description = "jump to urgent client", group = "client"}),
     awful.key({ altkey,           }, "Tab",
         function ()
-            awful.client.focus.history.previous()
+        -- awful.client.focus.history.previous()
+            awful.client.focus.byidx(-1)
             if client.focus then
                 client.focus:raise()
             end
@@ -864,7 +865,7 @@ client.connect_signal("property::maximized", border_adjust)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
 --awful.spawn.with_shell("nitrogen --restore")
-awful.spawn.with_shell("killall -q picom; picom --experimental-backends --blur-background --blur-method gaussian --detect-client-leader --detect-client-opacity")
+awful.spawn.with_shell("killall -q picom; picom -b --blur-background --blur-method gaussian --detect-client-leader --detect-client-opacity")
 awful.spawn.with_shell("~/.config/scripts/disable_tapping.sh")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("volumeicon")

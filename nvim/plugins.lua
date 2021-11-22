@@ -83,7 +83,7 @@ return require('packer').startup(function()
 	use 'LnL7/vim-nix'
 	use 'editorconfig/editorconfig-vim'
 	use 'rust-lang/rust.vim'
-	use 'Olical/conjure'
+	--use 'Olical/conjure'
 
 	-- lua, yes it needs its own section
 	use 'tjdevries/nlua.nvim'
@@ -103,6 +103,7 @@ return require('packer').startup(function()
 	use 'JulesWang/css.vim'
 	use 'cakebaker/scss-syntax.vim'
 	use 'AndrewRadev/tagalong.vim'
+	use 'lepture/vim-jinja'
 
 	vim.cmd([[
 		autocmd FileType scss set iskeyword+=-

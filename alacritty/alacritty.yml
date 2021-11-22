@@ -109,8 +109,10 @@ colors:
 key_bindings:
   - { key: V,        mods: Alt,     action: Paste           }
   - { key: C,        mods: Alt,     action: Copy            }
-  - { key: Key0,     mods: Control, action: ResetFontSize   }
   - { key: Equals,   mods: Alt,     action: IncreaseFontSize}
   - { key: Minus,    mods: Alt,     action: DecreaseFontSize}
+  - { key: PageUp,   mods: Alt,     action: ScrollPageUp   }
+  - { key: PageDown, mods: Alt,     action: ScrollPageDown }
   - { key: K,        mods: Control, action: ClearHistory    }
+  - { key: Key0,     mods: Control, action: ResetFontSize   }
 
